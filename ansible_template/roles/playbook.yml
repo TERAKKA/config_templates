@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 - hosts: "all" # применяем команды ко всем хостам из inventory
   become: true # становимся привилегированным пользователем
@@ -10,4 +11,18 @@
   - name: "Reload nginx"
     ansible.builtin.service:
       name: "nginx"
+=======
+---
+- hosts: "all" # применяем команды ко всем хостам из inventory
+  become: true # становимся привилегированным пользователем
+  roles: 
+  - nginx
+  - mysql
+  - php
+  
+  tasks:
+  - name: "Reload nginx"
+    ansible.builtin.service:
+      name: "nginx"
+>>>>>>> f426f32a19e3a6173b8efac6318120ec32f00736
       state: "reloaded"

@@ -1,0 +1,54 @@
+FROM scratch
+
+MAINTAINER FirstName LastName <first.last@company.com>
+
+LABEL com.company.key="value"
+
+VOLUME /srv/data
+
+ARG myvar=testval
+
+ENV ENV_VAR "value"
+
+EXPOSE 80
+
+SHELL ["/bin/sh", "-c"]
+
+ADD src/file.cpp /usr/include/mylib/file.cpp
+
+ONBUILD RUN /usr/sbin/nologin
+
+COPY src/file.cpp /usr/include/mylib/file.cpp
+
+RUN /usr/sbin/nologin
+
+WORKDIR /path/to/workdir
+
+USER nobody
+
+ENTRYPOINT top -b
+
+CMD /usr/bin/default_cmd
+
+# Both CMD and ENTRYPOINT instructions define what command gets executed when
+# running a container. There are few rules that describe their co-operation.
+#
+# 1. Dockerfile should specify at least one of CMD or ENTRYPOINT commands.
+# 2. ENTRYPOINT should be defined when using the container as an executable.
+# 3. CMD should be used as a way of defining default arguments for an ENTRYPOINT command
+#    or for executing an ad-hoc command in a container.
+# 4. CMD will be overridden when running the container with alternative arguments.
+
+STOPSIGNAL SIGTERM
+
+# The HEALTHCHECK instruction tells Docker how to test a container to check that it is still working.
+# This can detect cases such as a web server that is stuck in an infinite loop and unable to handle new
+# connections, even though the server process is still running.
+#
+# The options that can appear before CMD are:
+#
+# * --interval=DURATION (default: 30s)
+# * --timeout=DURATION (default: 30s)
+# * --retries=N (default: 3)
+
+HEALTHCHECK --interval=15 --timeout=60 --retries=5 CMD [ "/usr/bin/my_health_check_script", "arg_1" ]
