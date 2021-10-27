@@ -1,3 +1,3 @@
 # Configs_templates
 
-Various .conf files (nginx, database and more) and .yuml as standard templates.
+Various base .conf files (nginx, database and more) and .yuml (k8s, ansible and more) as standard templates.
