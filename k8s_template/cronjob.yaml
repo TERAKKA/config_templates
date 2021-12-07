@@ -1,0 +1,29 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hello
+spec:
+  #suspend: true                    #true - pause
+  #successfulJobsHistoryLimit: 3    #older - delete
+  #failedJobsHistoryLimit: 1        #failed older jobs - delete
+  schedule: "*/1 * * * *"           #min hour day month week_day
+  concurrencyPolicy: Allow          #parallelism: Allow (parallel), Forbid (one job, next is skipped), Replace (new job replaces current)
+  startingDeadlineSeconds: 20       #+- time credit for schedule time; 10+ (revision cronjob-controller every 10 sec)
+  jobTemplate:
+    spec:
+      completions: 8                #success required
+      parallelism: 4                #parallel jobs
+      backoffLimit: 2               #try restart
+      activeDeadlineSeconds: 60     #time try restart
+      ttlSecondsAfterFinished: 100  #clean up finished Jobs after 100 sec
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: quay.io/prometheus/busybox
+            args:
+            - /bin/sh
+            - -c
+            - date; echo Hello world!
+          restartPolicy: Never

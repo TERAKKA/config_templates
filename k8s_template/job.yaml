@@ -1,0 +1,21 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hello
+spec:
+  completions: 8                #success required
+  parallelism: 4                #parallel jobs
+  backoffLimit: 2               #try restart
+  activeDeadlineSeconds: 60     #time try restart
+  ttlSecondsAfterFinished: 100  #clean up finished Jobs after 100 sec
+  template:
+    spec:
+      containers:
+      - name: hello
+        image: quay.io/prometheus/busybox
+        args:
+        - /bin/sh
+        - -c
+        - date; echo Hello world!
+      restartPolicy: Never  #policy restart contaners; crush/error - not start
