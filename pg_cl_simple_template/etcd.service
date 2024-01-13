@@ -1,0 +1,21 @@
+[Service]
+User=etcd
+Type=notify
+ExecStart=/usr/local/bin/etcd \\
+ --name ${ETCD_NAME} \\
+ --enable-v2=true \\
+ --data-dir /var/lib/etcd \\
+ --initial-advertise-peer-urls http://${ETCD_HOST_IP}:2380 \\
+ --listen-peer-urls http://${ETCD_HOST_IP}:2380 \\
+ --listen-client-urls http://${ETCD_HOST_IP}:2379,http://127.0.0.1:2379 \\
+ --advertise-client-urls http://${ETCD_HOST_IP}:2379 \\
+ --initial-cluster-token etcd-cluster-1 \\
+ --initial-cluster revproxy=http://10.15.73.170:2380,postgresql1=http://10.15.73.176:2380,postgresql2=http://10.15.73.177:2380 \\
+ --initial-cluster-state new \\
+ --heartbeat-interval 1000 \\
+ --election-timeout 5000
+Restart=on-failure
+RestartSec=5
+  
+[Install]
+WantedBy=multi-user.target
